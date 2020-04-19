@@ -1,60 +1,42 @@
 # IMDBList2PlexCollection
-Simple script/[standalone build](https://github.com/deva5610/IMDBList2PlexCollection/releases/) to take an IMDB list, match the movies
-in your Plex Library and turn them into a collection.
+This is a fork of deva5610/IMDBList2PlexCollection which takes an IMDB list, match the movies in your Plex Library and turn them into a collection. 
 
-This script is a modified version of [this excellent script](https://gist.github.com/JonnyWong16/f5b9af386ea58e19bf18c09f2681df23).
-
-Thanks to /u/SwiftPanda16 for the original.
-
-# Disclaimer
-I'm not a developer.....at all. My modifications are probably quite slap happy, but they work fine for me and have on a few
-different installs now with 0 problems. **This doesn't mean it will for you.** I'm not responsible for any heartaches caused when you
-decide to mess with your Plex server. Maybe spin up a small test library before deploying it on a big library if you're concerned
-about my lack of ability!
+This script extends upon this and will add the movies not in the Plex Library to Radarr
 
 # Configuration
-Create or edit config.ini with your favourite text editor. Keep config.ini in the same working directory as the script. 
+Rename config.ini.sample to config.ini and populate all values
 
-**ONLY _"url="_, _"token="_ and _"library="_ underneath the [plex] header need to be set for the script to work**.
+With each additional list increase the first value by one.
+After the equal sign, list are comma separted with by:
+Name of the Collection in Plex
+IMDB List URL
+Number of Pages to Loop, Default is 1
 
-**url=** cannot end with a trailing slash - _**url=http://localhost:32400**_ & _**url=https://plex.woofwoof.wahoo**_ are both 
-examples of proper formatting, _**url=https://plex.woofwoof.wahoo/**_ is not.
+[general]
+add_missing=False
 
-**token=** can be found using [this guide.](https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/)
-A token can also be found in Tautulli or Ombi if you're using them. _**token=njkjdkHJJKAJKnjSAKJ**_ is an example of correct formatting.
+[lists]
+1=AFI's 100 Years...100 Movies - 1998,https://www.imdb.com/list/ls003795336/
 
-**library=** is pretty self explanatory. Multiple libraries supported, seperated by a comma ",". _**library=Movies and library=4K Movies,Movies,Kids Movies**_ are examples of correct formatting.
+[plex]
+url=http://PLEX-SERVER-URL:32400
+token=REPLACEmeWITHyourTOKEN
+library=Movies,Test Library,Kids
 
-They are the three variables most people will have to fill in.
+[radarr]
+host=http://RADARR-SERVER-URL:7878
+api=RADARR-API-TOKEN
+quality_profile=1
+monitored=True
+path_root=BASE-PATH-OF-MOVIES
+search=True
+minimumAvailability=released
 
-**_If, and only IF you're using_** 'The Movie Database' agent instead of Plex Movie you'll also need to edit the _**apikey=**_ variable
-located under the [tmdb] header.
+[tmdb]
+apikey=a41366ab753e5388ffcf31a63a6bbea8
 
-**Once complete it should look like**
-
-    [plex]
-    url=http://PLEXSERVERURL:32400
-    token=REPLACEmeWITHyourTOKEN
-    library=Movies,Test Library,Kids
-
-    [tmdb]
-    apikey=Optional
 
 # Usage
-If you are not using a [standalone binary](https://github.com/deva5610/IMDBList2PlexCollection/releases/) you'll need to install dependencies. Use pip to install the few listed requirements.
+Run pip install -r requirements.txt to install dependencies then run python imdb2collection.py
 
-pip install -r requirements.txt **_OR_** "pip install lxml" "pip install plexapi" "pip install requests" "pip install tmdbv3api" in turn.
-
-Run the script with "python imdb2collection.py" and follow the instructions. You'll want two things. A URL to the IMDB list you want to match (eg - https://www.imdb.com/list/ls064646512/) and to decide what you want the matching movies to be tagged as
-(eg - Pixar, Pixar Movies, Pixar Animations, etc - all 3 are valid entries when asked).
-
-***Note - You can only use the base URL (eg - https://www.imdb.com/list/ls064646512/) if there are any parameters after the last trailing slash, the program may not run properly. IMDB Searches are no longer supported.***
-
-That's it. The script should (hopefully!) run, it'll match movies from the IMDB list to your Movies Library and tag them into the
-collection you specified.
-
-# Issues
-Probably. Don't blame me. Fork, fix and merge.
-
-# Enjoy
-This one is simple.
+Running daily will ensure any newly added movies to the Plex Library are added to the collection
